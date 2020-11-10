@@ -14,11 +14,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
- * 
- */
-int main(int argc, char** argv) {
+FILE * handle;
+int nWritten;
+char *pin22 ="/sys/class/gpio/gpio22/value";
 
-    return (EXIT_SUCCESS);
+void main(void)
+{
+if ((handle = fopen(pin22,"w")) == NULL)
+{
+printf("Cannot open device. Try again later.\n");
+exit(1);
 }
-
+else
+{
+printf("Device successfully opened\n");
+}
+if(fputc('0' ,handle)==-1) // Set pin low
+{
+printf("Clr_Pin: Cannot write to file. Try again later.\n");
+exit(1);
+}
+else
+printf("Write to file %s successfully done.\n",pin22);
+fclose(handle);
+}
