@@ -14,7 +14,7 @@ FILE *file_gpio24;
 FILE *file_gpio25; 
 FILE *file_gpio22; 
 FILE *file_gpio27; 
-int value;
+
 
 
  //Write to 'export' file, so we gain access to port
