@@ -14,11 +14,16 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <syscall.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <sys/types.h>
 
-#endif /* HARDWARE_H */
+
+void export_pin22 (void);
+void set_pin22_output(void);
+void set_pin22 (void);
+
+#endif HARDWARE_H 
 

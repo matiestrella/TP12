@@ -1,40 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the edito
- */
 
-/* 
- * File:   main.c
- * Author: matias
- *
- * Created on 4 de noviembre de 2020, 12:25
- */
+#include "hardware.h"
+#include "ports.h"
+#define puertoA 'A' // por consigna los 8 LEDs se conectan al puerto A
+#define PASAJE_DECIMAL(n) ((n)-'0') // pasar char ingresado a su decimal correspondiente
 
-#include <stdio.h>
-#include <stdlib.h>
+int main(void) {
+    
+    void export_pin22 ();
+    void set_pin22_output();
+    void set_pin22_high ();
+    
+    printf("Simulador de 8 LEDs conectados al puerto A\n");
+    int flag = 1; //el programa se ejecuta mientras que el flag sea 1.
+    
+    while(flag){
+        printf("Opciones para manipular los LEDs:\n");
+        printf("-Un numero de 0 a 7 correspondiente al LED que se quiere prender.\n");
+        printf("-Ingresar la letra 't' para que todos los LEDs cambien al estado puesto.\n");
+        printf("-Ingresar la letra 'c' para apagar todos los LEDs.\n");
+        printf("-Ingresar la letra 's' para encender todos los LEDs.\n");
+        printf("-Ingresar la letra 'q' para salir del p.\n");
+        
+        char letra = 0;
+        uint16_t mask_t = 0x00FF;
+        while((letra=getchar())!= '\n'){ // se imlementan las funciones ya creadas
+            if (letra == 'q'){
+                flag=0; //termine el programa, sale del primer while.
+            }else if (letra =='t'){
+                maskToggle( puertoA, mask_t);
+                imprimir_puerto(puertoA);
+            }else if (letra == 'c'){
+                maskOff( puertoA, mask_t);
+                imprimir_puerto(puertoA);
+            }else if (letra == 's'){
+                maskOn( puertoA, mask_t);
+                imprimir_puerto(puertoA);               
+            }else if(letra>='0' && letra <='7'){
+                char valor = PASAJE_DECIMAL(letra);
+                bitSet(puertoA,valor);
+                imprimir_puerto(puertoA);
+            }else{
+                printf("Ingresaste una opcion INVALIDA\n");
+            }
+        }
+    }
+   
+    return (EXIT_SUCCESS);
+}
 
-FILE * handle;
-int nWritten;
-char *pin22 ="/sys/class/gpio/gpio22/value";
-
-void main(void)
-{
-if ((handle = fopen(pin22,"w")) == NULL)
-{
-printf("Cannot open device. Try again later.\n");
-exit(1);
-}
-else
-{
-printf("Device successfully opened\n");
-}
-if(fputc('0' ,handle)==-1) // Set pin low
-{
-printf("Clr_Pin: Cannot write to file. Try again later.\n");
-exit(1);
-}
-else
-printf("Write to file %s successfully done.\n",pin22);
-fclose(handle);
-}
