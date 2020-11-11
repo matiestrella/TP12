@@ -49,8 +49,6 @@ void set_pin22 (void)
     FILE * handle;
     int nWritten;
     char *pin22 ="/sys/class/gpio/gpio22/value";
-    void main(void)
-    {
     if ((handle = fopen(pin22,"w")) == NULL)
     {
     printf("Cannot open device. Try again later.\n");
@@ -68,5 +66,4 @@ void set_pin22 (void)
     else
     printf("Write to file %s successfully done.\n",pin22);
     fclose(handle);
-    }
 }
