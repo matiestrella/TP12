@@ -1,69 +1,133 @@
 
 #include "hardware.h"
+#include "ports.h"
 
 
-void export_pin22 (void)
+void exportar_todo (void)
 {
-    FILE * handle_export = fopen("/sys/class/gpio/export","w");
-    int nWritten;
-    if (handle_export == NULL)
+    
+FILE *file_gpio17; //file pointer
+FILE *file_gpio4; 
+FILE *file_gpio18; 
+FILE *file_gpio23; 
+FILE *file_gpio24; 
+FILE *file_gpio25; 
+FILE *file_gpio22; 
+FILE *file_gpio27; 
+int value;
+
+
+ //Write to 'export' file, so we gain access to port
+
+ file_gpio17=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio17, "17"); 
+ fclose(file_gpio17);
+ 
+  file_gpio4=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio4, "4"); 
+ fclose(file_gpio4);
+ 
+  file_gpio18=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio18, "18"); //GPIO22 is DO9
+ fclose(file_gpio18);
+ 
+  file_gpio23=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio23, "23"); //GPIO22 is DO9
+ fclose(file_gpio23);
+ 
+  file_gpio24=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio24, "24"); //GPIO22 is DO9
+ fclose(file_gpio24);
+ 
+  file_gpio25=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio25, "25"); //GPIO22 is DO9
+ fclose(file_gpio25);
+ 
+  file_gpio22=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio22, "22"); //GPIO22 is DO9
+ fclose(file_gpio22);
+ 
+  file_gpio27=fopen("/sys/class/gpio/export", "w");
+ fprintf(file_gpio27, "27"); //GPIO22 is DO9
+ fclose(file_gpio27);
+ 
+ 
+ //Write 'out' to this port 'direction' file, so it's output port
+ file_gpio17=fopen("/sys/class/gpio/gpio17/direction", "w");
+ fprintf(file_gpio17, "out");
+ fclose(file_gpio17);
+ 
+ file_gpio4=fopen("/sys/class/gpio/gpio4/direction", "w");
+ fprintf(file_gpio4, "out");
+ fclose(file_gpio4);
+ 
+ file_gpio18=fopen("/sys/class/gpio/gpio18/direction", "w");
+ fprintf(file_gpio18, "out");
+ fclose(file_gpio18);
+ 
+ file_gpio23=fopen("/sys/class/gpio/gpio23/direction", "w");
+ fprintf(file_gpio23, "out");
+ fclose(file_gpio23);
+ 
+ file_gpio24=fopen("/sys/class/gpio/gpio24/direction", "w");
+ fprintf(file_gpio24, "out");
+ fclose(file_gpio24);
+ 
+ file_gpio25=fopen("/sys/class/gpio/gpio25/direction", "w");
+ fprintf(file_gpio25, "out");
+ fclose(file_gpio25);
+ 
+ file_gpio22=fopen("/sys/class/gpio/gpio22/direction", "w");
+ fprintf(file_gpio22, "out");
+ fclose(file_gpio22);
+ 
+ file_gpio27=fopen("/sys/class/gpio/gpio27/direction", "w");
+ fprintf(file_gpio27, "out");
+ fclose(file_gpio27);
+ 
+ }
+ 
+
+void mod_pin(char pin,char cont[])
+{
+ FILE *file_gpio; 
+ 
+char n1,n2;
+char direc[] = "/sys/class/gpio/gpio17/value";
+
+ if(pin==1)
+ {
+ file_gpio=fopen("/sys/class/gpio/gpio4/value", "w");
+ }
+ else
+ {
+    switch (pin)
     {
-    printf("Cannot open EXPORT File. Try again later.\n");
-    exit(1);
+        case 0 : n1='1'; n2='7';break;
+        case 2 : n1='1'; n2='8';break;
+        case 3 : n1='2'; n2='3';break;
+        case 4 : n1='2'; n2='4';break;
+        case 5 : n1='2'; n2='5';break;
+        case 6 : n1='2'; n2='2';break;
+        case 7 : n1='2'; n2='7';break;
     }
-    nWritten=fputs("22",handle_export);
-    if (nWritten==-1)
-    {
-    printf ("Cannot EXPORT PIN . Try again later.\n");
-    exit(1);
-    }
-    else
-    printf("EXPORT File opened succesfully \n");
-    fclose(handle_export); // Be carefull do this for EACH pin !!!
+    direc[20]= n1;
+    direc[21]= n2;
+  file_gpio=fopen(direc, "w");  
+ }
+
+ fprintf(file_gpio, cont);
+ fclose(file_gpio);
 }
 
-void set_pin22_output(void)
-{
-    FILE * handle_direction = fopen("/sys/class/gpio/gpio22/direction","w");
-    int nWritten;
-    if (handle_direction == NULL)
-    {
-    printf("Cannot open DIRECTION File");
-    exit(1);
-    }
-    // Set pin Direction
-    if ((nWritten=fputs("out",handle_direction))==-1)
-    {
-    printf("Cannot open DIRECTION pin. Try again later.\n");
-    exit(1);
-    }
-    else
-    {
-    printf("DIRECTION File for PIN opened succesfully\n");
-    }
-    fclose(handle_direction); // Be carefull do this for EACH pin !!!
-}
 
-void set_pin22 (void)
+void actualizar_leds(void)
 {
-    FILE * handle;
-    int nWritten;
-    char *pin22 ="/sys/class/gpio/gpio22/value";
-    if ((handle = fopen(pin22,"w")) == NULL)
+    char i;
+    char s[]="0";
+    for (i=0;i<=7;i++)
     {
-    printf("Cannot open device. Try again later.\n");
-    exit(1);
+    s[0] = (bitGet ('A', i) + '0');
+    mod_pin(i,s);
     }
-    else
-    {
-    printf("Device successfully opened\n");
-    }
-    if(fputc('1' ,handle)==-1) // Set pin low
-    {
-    printf("Clr_Pin: Cannot write to file. Try again later.\n");
-    exit(1);
-    }
-    else
-    printf("Write to file %s successfully done.\n",pin22);
-    fclose(handle);
 }

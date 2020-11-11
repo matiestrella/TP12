@@ -5,12 +5,12 @@
 #define PASAJE_DECIMAL(n) ((n)-'0') // pasar char ingresado a su decimal correspondiente
 
 int main(void) {
-    
-    void export_pin22 ();
-    void set_pin22_output();
-    void set_pin22_high ();
-    
+
+
     printf("Simulador de 8 LEDs conectados al puerto A\n");
+  
+    exportar_todo();
+    
     int flag = 1; //el programa se ejecuta mientras que el flag sea 1.
     
     while(flag){
@@ -23,7 +23,9 @@ int main(void) {
         
         char letra = 0;
         uint16_t mask_t = 0x00FF;
+        actualizar_leds();
         while((letra=getchar())!= '\n'){ // se imlementan las funciones ya creadas
+
             if (letra == 'q'){
                 flag=0; //termine el programa, sale del primer while.
             }else if (letra =='t'){
@@ -42,9 +44,9 @@ int main(void) {
             }else{
                 printf("Ingresaste una opcion INVALIDA\n");
             }
+            actualizar_leds();
         }
     }
    
     return (EXIT_SUCCESS);
 }
-
